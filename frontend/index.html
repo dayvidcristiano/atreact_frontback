@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Frontend React com Fetch</title>
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+
+<body>
+    <h1>Comunicação React com Backend Node.js</h1>
+    <div id="app"></div>
+
+    <script type="text/babel">
+        class MensagemDoServidor extends React.Component {
+            constructor(props) {
+                super(props);
+                this.state = {
+                    mensagem: null
+                };
+                this.buscarMensagem = this.buscarMensagem.bind(this);
+            }
+
+            // Chama o backend ao clicar no botão
+            buscarMensagem() {
+                fetch('http://localhost:8080/mensagem')
+                    .then(response => response.text())
+                    .then(data => this.setState({ mensagem: data }))
+                    .catch(error => {
+                        console.error("Erro ao buscar mensagem:", error);
+                        this.setState({ mensagem: 'Erro ao conectar com o servidor.' });
+                    });
+            }
+
+            render() {
+                return (
+                    <div>
+                        <button onClick={this.buscarMensagem}>Buscar Mensagem</button>
+                        <p><strong>Resposta:</strong> {this.state.mensagem}</p>
+                    </div>
+                );
+            }
+        }
+
+        ReactDOM.render(<MensagemDoServidor />, document.getElementById('app'));
+    </script>
+</body>
+
+</html>
